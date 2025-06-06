@@ -1,0 +1,704 @@
+/* Reset dan global */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+}
+
+.container {
+  padding-inline: 32px;
+  margin-inline: auto;
+  max-width: 1300px;
+}
+
+header {
+  background-color: #f8f8f8; /* ivory lembut */
+  color: #333;
+}
+
+.main-header {
+  min-height: 90px;
+  padding-block: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+
+.brand-name {
+  font-size: 1.125rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+
+.navigation-drawer {
+  min-height: 100vh;
+  width: 200px;
+  padding: 20px 10px;
+  background-color: #fff;
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  box-shadow: 0 0 4px 2px #00000033;
+  transform: translateX(-100%);
+  transition: transform 350ms;
+  z-index: 9999;
+}
+
+.navigation-drawer.open {
+  transform: translateX(0);
+}
+
+.drawer-button {
+  padding: 8px;
+  border: 0;
+  border-radius: 4px;
+  display: inline-block;
+  background-color: transparent;
+  font-weight: bold;
+  font-size: 28px;
+  color: #141e16;
+  cursor: pointer;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px 20px;
+}
+
+.nav-list li a {
+  padding: 6px 10px;
+  display: block;
+  color: #333;
+  text-decoration: none;
+}
+
+.nav-list li a:hover {
+  text-decoration: underline;
+}
+
+/* MAIN */
+.main-content {
+  padding-block: 20px;
+}
+
+/* Responsive drawer */
+@media screen and (width > 1000px) {
+  .navigation-drawer {
+    min-height: auto;
+    width: auto;
+    padding: 0;
+    background-color: transparent;
+    flex-direction: row;
+    justify-content: space-between;
+    position: static;
+    box-shadow: none;
+    transform: translateX(0);
+  }
+
+  .nav-list {
+    flex-direction: row;
+  }
+
+  .nav-list li a {
+    display: inline-block;
+  }
+
+  .drawer-button {
+    display: none;
+  }
+}
+
+/* ===== AUTH PAGES (Login & Register) ===== */
+body.login-page {
+  background: linear-gradient(-45deg, #a1c4fd, #c2e9fb, #d4fc79, #96e6a1);
+  background-size: 400% 400%;
+  animation: loginGradientBG 15s ease infinite;
+}
+
+@keyframes loginGradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.auth-container {
+  max-width: 400px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.auth-container img.logo {
+  max-width: 100px;
+  margin: 0 auto 1rem;
+  display: block;
+}
+
+.auth-container h1 {
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+  text-align: center;
+  color: var(--primary, #007BFF);
+}
+
+.auth-form,
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-form label,
+form label {
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.auth-form input,
+form input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.auth-form input:focus,
+form input:focus {
+  outline: none;
+  border-color: var(--primary, #007BFF);
+  box-shadow: 0 0 4px var(--primary, #007BFF);
+}
+
+.auth-form button[type="submit"],
+form button[type="submit"],
+.auth-form button,
+form button {
+  padding: 0.75rem;
+  font-size: 1rem;
+  background: var(--primary, #007BFF);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.auth-form button[type="submit"]:hover,
+form button[type="submit"]:hover,
+.auth-form button:hover,
+form button:hover {
+  opacity: 0.9;
+}
+
+.auth-switch {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.auth-switch button {
+  background: none;
+  border: none;
+  color: var(--primary, #007BFF);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 0;
+}
+
+#login-status,
+#register-status {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: red;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+@media screen and (max-width: 400px) {
+  .auth-container {
+    margin: 2rem 1rem;
+    padding: 1.5rem;
+  }
+}
+
+main {
+  transition: opacity 300ms ease-in-out;
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--primary, #007BFF);
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 1rem;
+  font-family: inherit;
+}
+.logout-button:hover {
+  opacity: 0.8;
+}
+
+.site-footer {
+  padding: 1rem 0;
+  text-align: center;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px 16px;
+  z-index: 1000;
+  transition: top 0.3s;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* container dengan rasio tetap */
+.detail-image-container {
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 4 / 3;
+  margin: 1rem auto;
+  overflow: hidden;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background: #f5f5f5;
+}
+
+.detail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Story Card */
+.story-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.story-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 200ms;
+}
+.story-card:hover {
+  transform: translateY(-4px);
+}
+
+.story-image-container {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.story-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.story-card h2 {
+  margin: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.story-card p {
+  margin: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.story-card small {
+  color: #777;
+}
+
+/* Tombol untuk menghapus cerita dari daftar like */
+.btn-remove-like {
+  background-color: #e57373; /* Merah muda */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-top: 10px;
+}
+
+.btn-remove-like:hover {
+  background-color: #d32f2f; /* Merah lebih gelap saat hover */
+  transform: scale(1.05); /* Sedikit membesar saat hover */
+}
+
+.btn-remove-like:active {
+  background-color: #b71c1c; /* Merah lebih gelap saat ditekan */
+  transform: scale(1); /* Tidak membesar lagi saat ditekan */
+}
+
+/* Tampilan loading */
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Layout grid untuk daftar cerita */
+.story-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Grid otomatis, tiap item min 280px */
+  gap: 20px;
+  padding: 0;
+  list-style: none;
+}
+
+/* Gaya untuk kartu cerita */
+.story-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  padding: 15px;
+}
+
+.story-card:hover {
+  transform: translateY(-10px); /* Efek hover untuk sedikit terangkat */
+}
+
+/* Gambar cerita */
+.story-image-container {
+  height: 180px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #f0f0f0;
+}
+
+.story-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Judul cerita */
+.story-card h2 {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #333;
+}
+
+/* Deskripsi cerita */
+.story-card p {
+  font-size: 0.9em;
+  color: #555;
+  margin: 10px 0;
+}
+
+/* Tombol Kembali */
+#btn-back {
+  background-color: #3498db;  /* Biru */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1em;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+#btn-back:hover {
+  background-color: #2980b9; /* Biru gelap saat hover */
+  transform: scale(1.05); /* Sedikit membesar saat hover */
+}
+
+#btn-back:active {
+  background-color: #1c6f99; /* Biru lebih gelap saat ditekan */
+  transform: scale(1); /* Tidak membesar lagi saat ditekan */
+}
+
+/* Tombol Suka Cerita */
+#btn-like {
+  background-color: #2ecc71;  /* Hijau Cerah (Suka Cerita) */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1em;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+#btn-like:hover {
+  background-color: #27ae60; /* Hijau lebih gelap saat hover */
+  transform: scale(1.05); /* Sedikit membesar saat hover */
+}
+
+#btn-like:active {
+  background-color: #1e8449; /* Hijau lebih gelap saat ditekan */
+  transform: scale(1); /* Tidak membesar lagi saat ditekan */
+}
+
+/* Loading Spinner */
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Detail Content Section */
+#detail-content {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+#detail-content h1 {
+  font-size: 1.5em;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+#detail-content p {
+  font-size: 1em;
+  color: #555;
+}
+
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.p-1{
+  padding: 0.25rem;
+}
+
+.p-2{
+  padding: 0.5rem;
+}
+
+.p-3{
+  padding: 0.75rem;
+}
+
+.p-4{
+  padding: 1rem;
+}
+
+.p-5{
+  padding: 1.25rem;
+}
+
+.pl-1{
+  padding-left: 0.25rem;
+}
+
+.pl-2{
+  padding-left: 0.5rem;
+}
+
+.pl-3{
+  padding-left: 0.75rem;
+}
+
+.pl-4{
+  padding-left: 1rem;
+}
+
+.pl-5{
+  padding-left: 1.25rem;
+}
+
+.pr-1{
+  padding-right: 0.25rem;
+}
+
+.pr-2{
+  padding-right: 0.5rem;
+}
+
+.pr-3{
+  padding-right: 0.75rem;
+}
+
+.pr-4{
+  padding-right: 1rem;
+}
+
+.pr-5{
+  padding-right: 1.25rem;
+}
+
+.pt-1{
+  padding-top: 0.25rem;
+}
+
+.pt-2{
+  padding-top: 0.5rem;
+}
+
+.pt-3{
+  padding-top: 0.75rem;
+}
+
+.pt-4{
+  padding-top: 1rem;
+}
+
+.pt-5{
+  padding-top: 1.25rem;
+}
+
+.pb-1{
+  padding-bottom: 0.25rem;
+}
+
+.pb-2{
+  padding-bottom: 0.5rem;
+}
+
+.pb-3{
+  padding-bottom: 0.75rem;
+}
+
+.pb-4{
+  padding-bottom: 1rem;
+}
+
+.pb-5{
+  padding-bottom: 1.25rem;
+}
+
+.py-1{
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.py-2{
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.py-3{
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.py-4{
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.px-1{
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+.px-2{
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.px-3{
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.px-4{
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.text-base {
+  font-size: 1rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+}
+
+.box-shadow {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
