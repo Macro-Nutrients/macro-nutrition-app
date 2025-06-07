@@ -1,5 +1,5 @@
 import { FetchAPI } from "../../data/api";
-import { showToast } from '../../utils/toast.js'; 
+import { showToast } from '../../utils/toast.js';
 export default class PredictsPresenter {
   constructor({ view }) {
     this.view = view;
@@ -21,10 +21,16 @@ async analyzesImage(file) {
       throw new Error(res.message);
     } 
 
+    const result = res.result || {};
+    if (!result.label || !result.confidence) {
+      showToast('Hasil analisis tidak lengkap!', 'error');
+      throw new Error('Hasil analisis tidak lengkap');
+    }
+
     this.view.renderSummary([
-      { name: 'Label', value: res.result.label },
-      { name: 'Confidence', value: res.result.confidence.toFixed(2) },
-      ...Object.entries(res.result.facts || {}).map(([key, value]) => ({ name: key, value })),
+      { name: 'Label', value: result.label },
+      { name: 'Confidence', value: result.confidence.toFixed(2) },
+      ...Object.entries(result.facts || {}).map(([key, value]) => ({ name: key, value })),
     ]);
 
     showToast('Gambar berhasil dianalisis!', 'success');
