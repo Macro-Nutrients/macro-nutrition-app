@@ -1,3 +1,4 @@
+import { showToast } from '../../utils/toast.js';
 import HomePresenter from './home-presenter.js';
 
 export default class HomePage {
@@ -8,68 +9,28 @@ export default class HomePage {
   async render() {
     return `
       <section class="container text-center">
-      <h1 class="text-center py-2">Macro Nutrition Facts</h1>
-      <form id="analisa" class="box-shadow p-4 mb-4" style="max-width: 600px; margin: auto;">
-        <p class="py-2">Silahkan masukkan gambar makanan anda</p>
-        <input type="file" id="file-input" accept="image/*" />
-        <div id="image-preview" class="image-preview mb-4"></div>
-        <button type="submit" class="btn btn-primary mt-2 mx-auto my-auto" style="width: 100px">Analisa</button>
-      </form>
+        <h1 class="text-center py-2">Macro Nutrition Facts</h1>
 
-      <br>
-      <div id="loading-container"></div>
-      <div id="result" class="result"></div>
+        <div id="loading-container"></div>
+
+        <div id="result" class="result">
+        
+          <!-- Riwayat Prediksi -->
+          <div id="history-container" class="mt-4">
+            <h3>Riwayat Analisa</h3>
+            <br>
+            <div id="history-list" class="list-group">
+              <!-- Riwayat akan ditampilkan disini -->
+            </div>
+          </div>
+          
+        </div>
       </section>
     `;
-
   }
 
   async afterRender() {
-    // Add event listener for image preview
-    const fileInput = document.getElementById('file-input');
-    if (fileInput) {
-      fileInput.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-          this.showImagePreview(file);
-        }
-      });
-    }
-
-    document.getElementById('analisa').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const fileInput = document.getElementById('file-input');
-      const file = fileInput.files[0];
-      if (!file) {
-        alert('Silakan pilih gambar terlebih dahulu.');
-        return;
-      }
-      this.presenter.analyzeImage(file);
-
-      this.showLoading();
-      // try {
-      //   const formData = new FormData();
-      //   formData.append('image', file);
-
-      //   const response = await fetch('https://api.example.com/analyse', {
-      //     method: 'POST',
-      //     body: formData,
-      //   });
-
-      //   if (!response.ok) {
-      //     throw new Error('Gagal menganalisis gambar');
-      //   }
-
-      //   const data = await response.json();
-      //   this.hideLoading();
-      //   this.renderStories(data.facts);
-      // } catch (error) {
-      //   this.hideLoading();
-      //   this.renderError(error.message);
-      // }
-    });
-
-    await this.presenter.showStories();
+    await this.presenter.init(); // Delegasikan logika ke presenter
   }
 
   showLoading() {
@@ -80,36 +41,26 @@ export default class HomePage {
     document.getElementById('loading-container').innerHTML = '';
   }
 
-  renderStories(stories) {
-    const container = document.getElementById('facts');
-    container.innerHTML = stories
-      .map(
-        (s) => `
-          <article class="story-card">
-            <a href="#/detail/${s.id}">
-              <div class="story-image-container">
-                <img src="${s.photoUrl || ''}" alt="Foto oleh ${s.name}" class="story-image"/>
-              </div>
-              <h2>${s.name}</h2>
-              <p>${s.description.slice(0, 100)}…</p>
-              <p><small>Dibuat: ${s.formattedDate || '-'}</small></p>
-              <p><small>Lokasi: ${s.lat || 0}, ${s.lon || 0}</small></p>
-            </a>
-          </article>
-        `
-      )
-      .join('');
-  }
+renderSummary(summary) {
+  const resultContainer = document.getElementById('result');
+  resultContainer.innerHTML = `
+    <div class="row">
+      <div class="col-12">
+        <div class="card mx-auto mt-4 p-3 shadow" style="max-width: 500px;">
+          <h3 class="mb-3 text-center text-success">Hasil Analisis</h3>
+          <ul class="list-group list-group-flush">
+            ${summary.map(item => `
+              <li class="list-group-item">
+                <strong>${item.name}</strong>: ${item.value}
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      </div>
+    </div>
+  `;
+}
 
-  renderSummary(summary) {
-    const resultContainer = document.getElementById('result');
-    resultContainer.innerHTML = `
-      <h2>Hasil Analisis</h2>
-      <ul>
-        ${summary.map(item => `<li>${item.name}: ${item.value}</li>`).join('')}
-      </ul>
-    `;
-  }
 
   showImagePreview(file) {
     const reader = new FileReader();
@@ -120,16 +71,47 @@ export default class HomePage {
       img.style.maxWidth = '100%';
       img.style.borderRadius = '8px';
       img.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-      
+
       const container = document.getElementById('image-preview');
-      container.innerHTML = ''; // Clear previous content
+      container.innerHTML = '';
       container.appendChild(img);
     };
     reader.readAsDataURL(file);
   }
 
-
-  renderError(msg) {
-    document.getElementById('story-list').innerHTML = `<p>${msg}<br>Silakan login atau coba lagi.</p>`;
+  // Fungsi untuk merender riwayat analisa
+renderHistory(history) {
+  const historyList = document.getElementById('history-list');
+  if (history.length === 0) {
+    historyList.innerHTML = '<p class="text-muted">Belum ada riwayat analisa.</p>';
+    return;
   }
+
+  // Membuat grid untuk menampilkan 4 card per baris
+  historyList.innerHTML = `
+    <div class="row">
+      ${history.map(item => `
+        <div class="col-md-3 mb-3">
+          <div class="card shadow">
+            <div class="card-body">
+              <h5 class="card-title"><strong>Label:</strong> ${item.label}</h5>
+              <div>
+                <strong>Fakta:</strong>
+                <ul>
+                  <li><strong>Calories:</strong> ${item.facts.calories}</li>
+                  <li><strong>Carbohydrates:</strong> ${item.facts.carbohydrates}</li>
+                  <li><strong>Fat:</strong> ${item.facts.fat}</li>
+                  <li><strong>Protein:</strong> ${item.facts.protein}</li>
+                </ul>
+              </div>
+              <div><strong>Confidence:</strong> ${item.confidence}</div>
+              <div><strong>Created At:</strong> ${new Date(item.created_at).toLocaleString()}</div>
+              <button class="btn btn-info mt-3" onclick="viewHistoryDetail('${item.id}')">Lihat Detail</button>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
 }

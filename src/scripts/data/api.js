@@ -6,7 +6,25 @@ const BASE = CONFIG.BASE_URL;
  * Generic request helper
  */
 async function request(path, options = {}) {
-  const response = await fetch(`${BASE}${path}`, options);
+  // Salin options supaya header bisa diubah
+  const newOptions = { ...options };
+  newOptions.headers = newOptions.headers || {};
+
+  // Cek apakah body itu FormData
+  const isFormData = newOptions.body instanceof FormData;
+
+  if (!isFormData) {
+    // Kalau bukan FormData, pastikan header Content-Type ada
+    newOptions.headers['Content-Type'] = newOptions.headers['Content-Type'] || 'application/json';
+  } else {
+    // Kalau FormData, jangan set Content-Type sama sekali
+    // karena fetch akan set otomatis beserta boundary
+    if ('Content-Type' in newOptions.headers) {
+      delete newOptions.headers['Content-Type'];
+    }
+  }
+
+  const response = await fetch(`${BASE}${path}`, newOptions);
   const json = await response.json().catch(() => ({}));
   if (!response.ok) {
     throw new Error(json.message || `HTTP ${response.status}`);
@@ -18,101 +36,65 @@ async function request(path, options = {}) {
 
 export const FetchAPI = {
   // Register new user
-  register: (payload) =>
-    request('/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    }),
+register: (payload) =>
+  request('/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  }),
 
-  // Login user and store token
-  login: async (payload) => {
-    const data = await request('/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    if (!data.error) {
-      localStorage.setItem('token', data.loginResult.token);
-    }
-    return data;
-  },
+login: async (payload) => {
+  const data = await request('/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  
+  if (!data.error) {
+    // Sesuaikan dengan response dari backend
+    localStorage.setItem('token', data.result.token);
+  }
+  return data;
+},
+  //untuk login
+async analyze(formData) {
+  const token = localStorage.getItem('token');
+  const headers = {};
 
-  // Fetch Analyse Image
-  analyze: async (payload) => {
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  return await request('/inference/predict', {
+    method: 'POST',
+    body: formData,
+    headers,
+  });
+},
+// Fungsi untuk mengambil riwayat analisa
+  // Ambil riwayat prediksi
+// Ambil riwayat prediksi
+async getHistory() {
+  const token = localStorage.getItem('token');
+  const headers = {};
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  return await request('/inference/history', {
+    method: 'GET',
+    headers,
+  });
+},
+  // Fetch Analyse Image untuk image free bukan login
+  analyzes: async (payload) => {
     // payload should be a FormData object for file upload
-    return await request('/predict', {
+    return await request('/inference/predict', {
       method: 'POST',
       body: payload,
     });    
   },
-
-  // // Fetch all stories
-  // getStories: (opts = {}) => {
-  //   const { page = 1, size = 20, location = 0 } = opts;
-  //   const token = localStorage.getItem('token') || '';
-  //   const params = new URLSearchParams({ page, size, location });
-  //   return request(`/stories?${params}`, {
-  //     headers: { Authorization: `Bearer ${token}` },
-  //   });
-  // },
-
-  // // Fetch detail of one story
-  // getStoryDetail: (id) => {
-  //   if (!id) return Promise.reject(new Error('Story ID is required'));
-  //   const token = localStorage.getItem('token') || '';
-  //   return request(`/stories/${id}`, {
-  //     headers: { Authorization: `Bearer ${token}` },
-  //   });
-  // },
-
-  // elevation: async (lat, lon) => {
-  //   const url = `https://api.opentopodata.org/v1/test-dataset?locations=${lat},${lon}`;
-  //   const resp = await fetch(url);
-  //   const data = await resp.json();
-  //   return data.results?.[0]?.elevation ?? 0;
-  // },
-
-  // reverseGeocode: async (lat, lon) => {
-  //   const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
-  //   const resp = await fetch(url, {
-  //     headers: { 'User-Agent': 'DicodingStoryApp' },
-  //   });
-  //   const data = await resp.json();
-  //   return data.address?.state ?? null;
-  // },
-
-  // // Add new story (authenticated)
-  // addStory: (payload) => {
-  //   const token = localStorage.getItem('token') || '';
-  //   const form = new FormData();
-  //   form.append('description', payload.description);
-  //   form.append('photo', payload.photo);
-  //   if (payload.lat != null && payload.lon != null) {
-  //     form.append('lat', payload.lat);
-  //     form.append('lon', payload.lon);
-  //   }
-  //   return request('/stories', {
-  //     method: 'POST',
-  //     headers: { Authorization: `Bearer ${token}` },
-  //     body: form,
-  //   });
-  // },
-
-  // // Add new story as guest (no auth)
-  // addStoryGuest: (payload) => {
-  //   const form = new FormData();
-  //   form.append('description', payload.description);
-  //   form.append('photo', payload.photo);
-  //   if (payload.lat != null && payload.lon != null) {
-  //     form.append('lat', payload.lat);
-  //     form.append('lon', payload.lon);
-  //   }
-  //   return request('/stories/guest', {
-  //     method: 'POST',
-  //     body: form,
-  //   });
-  // },
 
   // Push subscription
   subscribePush: (payload) => {

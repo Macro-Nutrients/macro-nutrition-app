@@ -1,14 +1,20 @@
+// src/scripts/app.js
 import routes from '../routes/routes.js';
 import { getActiveRoute, getRouteParams } from '../routes/url-parser.js';
 import { subscribeToPush, unsubscribeFromPush, isSubscribedToPush } from '../utils/push.js';
+import { initNavigation } from '../components/navigation.js';
 
 export default class App {
   constructor({ content, drawerButton, navigationDrawer }) {
     this.content = content;
     this.drawerButton = drawerButton;
     this.navigationDrawer = navigationDrawer;
+
     this._setupDrawer();
     this._setupNotificationToggle();
+
+    // Inisialisasi navigasi dinamis (login/logout dan link analisa)
+    initNavigation();
   }
 
   _setupDrawer() {
@@ -25,31 +31,26 @@ export default class App {
     });
   }
 
-  // Fungsi untuk memeriksa langganan notifikasi dan memperbarui teks tombol
   async _setupNotificationToggle() {
     const btn = document.querySelector('#notif-toggle-btn');
     if (!btn) return;
 
-    // Fungsi untuk memperbarui teks tombol sesuai status langganan
     const updateButton = async () => {
-      const subscribed = await isSubscribedToPush(); // Mengecek status langganan notifikasi
-      btn.textContent = subscribed ? '🔕 Matikan Notifikasi' : '🔔 Aktifkan Notifikasi'; // Sesuaikan teks tombol
+      const subscribed = await isSubscribedToPush();
+      btn.textContent = subscribed ? '🔕 Matikan Notifikasi' : '🔔 Aktifkan Notifikasi';
     };
 
-    await updateButton(); // Perbarui status tombol ketika halaman pertama kali dimuat
+    await updateButton();
 
-    // Menambahkan event listener untuk mengubah status langganan notifikasi
     btn.addEventListener('click', async () => {
       try {
         const subscribed = await isSubscribedToPush();
         if (subscribed) {
-          // Jika sudah berlangganan, batalkan langganan
           await unsubscribeFromPush();
         } else {
-          // Jika belum berlangganan, langganan notifikasi
           await subscribeToPush();
         }
-        await updateButton(); // Perbarui status tombol setelah langganan berhasil diubah
+        await updateButton();
       } catch (err) {
         console.error('Gagal toggle notifikasi:', err);
       }
@@ -65,8 +66,9 @@ export default class App {
       return;
     }
     const page = new Page(params);
+
     if (document.startViewTransition) {
-      document.startViewTransition(async () => {
+      await document.startViewTransition(async () => {
         this.content.innerHTML = await page.render();
         await page.afterRender();
       });

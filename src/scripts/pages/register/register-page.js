@@ -1,5 +1,5 @@
 import RegisterPresenter from './register-presenter.js';
-
+import { showToast } from '../../utils/toast.js'; 
 export default class RegisterPage {
   constructor() {
     this.presenter = new RegisterPresenter({ view: this });
@@ -32,6 +32,7 @@ export default class RegisterPage {
           </div>
 
           <div id="register-status"></div>
+          <div id="spinner" class="spinner hidden"></div>
         </div>
       </section>
     `;
@@ -40,16 +41,14 @@ export default class RegisterPage {
   async afterRender() {
     document.body.classList.add('login-page');
 
-    // bind form submit ke Presenter
     document.getElementById('register-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = e.target.name.value.trim();
+      const username = e.target.name.value.trim();
       const email = e.target.email.value.trim();
       const password = e.target.password.value;
-      this.presenter.register({ name, email, password });
+      this.presenter.register({ username, email, password });
     });
 
-    // toggle password visibility
     const toggleBtn = document.querySelector('.toggle-password');
     toggleBtn.addEventListener('click', () => {
       const input = document.getElementById('password');
@@ -58,7 +57,6 @@ export default class RegisterPage {
       toggleBtn.textContent = isText ? '👁️' : '🙈';
     });
 
-    // switch to login
     document.getElementById('to-login').addEventListener('click', () => {
       if (document.startViewTransition) {
         document.startViewTransition(() => location.hash = '/login');
@@ -74,16 +72,21 @@ export default class RegisterPage {
 
   // View API for Presenter:
   showLoading() {
-    document.getElementById('register-status').textContent = 'Memproses pendaftaran…';
+    document.getElementById('spinner').classList.remove('hidden');
+    showToast('Memproses pendaftaran…', 'success');
   }
   hideLoading() {
-    document.getElementById('register-status').textContent = '';
+    document.getElementById('spinner').classList.add('hidden');
   }
   showError(msg) {
-    document.getElementById('register-status').textContent = `Error: ${msg}`;
+    this.hideLoading();
+    showToast(`Error: ${msg}`, 'error');
   }
   registerSuccess() {
-    document.getElementById('register-status').textContent = 'Berhasil daftar! Mengalihkan ke login…';
-    setTimeout(() => location.hash = '/login', 1000);
+    this.hideLoading();
+    showToast('Berhasil daftar! Mengalihkan ke login…', 'success');
+    setTimeout(() => {
+      location.hash = '/login';
+    }, 3000);
   }
 }

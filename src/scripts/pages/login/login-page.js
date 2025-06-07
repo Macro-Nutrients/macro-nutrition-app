@@ -1,7 +1,5 @@
-
-
 import LoginPresenter from './login-presenter.js';
-
+import { showToast } from '../../utils/toast.js'; 
 export default class LoginPage {
   constructor() {
     this.presenter = new LoginPresenter({ view: this });
@@ -31,16 +29,15 @@ export default class LoginPage {
           </div>
 
           <div id="login-status"></div>
+          <div id="spinner" class="spinner hidden"></div>
         </div>
       </section>
     `;
   }
 
   async afterRender() {
-    // beri kelas untuk styling background
     document.body.classList.add('login-page');
 
-    // bind form submission ke Presenter
     document.getElementById('login-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const email = e.target.email.value.trim();
@@ -48,7 +45,6 @@ export default class LoginPage {
       this.presenter.login({ email, password });
     });
 
-    // toggle password visibility
     const toggleBtn = document.querySelector('.toggle-password');
     toggleBtn.addEventListener('click', () => {
       const input = document.getElementById('password');
@@ -57,7 +53,6 @@ export default class LoginPage {
       toggleBtn.textContent = isText ? '👁️' : '🙈';
     });
 
-    // switch to register
     document.getElementById('to-register').addEventListener('click', () => {
       if (document.startViewTransition) {
         document.startViewTransition(() => location.hash = '/register');
@@ -66,7 +61,6 @@ export default class LoginPage {
       }
     });
 
-    // bersihkan kelas saat pindah route
     window.addEventListener('hashchange', () => {
       document.body.classList.remove('login-page');
     });
@@ -74,15 +68,21 @@ export default class LoginPage {
 
   // View API for Presenter:
   showLoading() {
-    document.getElementById('login-status').textContent = 'Memproses…';
+    document.getElementById('spinner').classList.remove('hidden');
+    showToast('Memproses login…', 'success');
   }
   hideLoading() {
-    document.getElementById('login-status').textContent = '';
+    document.getElementById('spinner').classList.add('hidden');
   }
   showError(msg) {
-    document.getElementById('login-status').textContent = `Error: ${msg}`;
+    this.hideLoading();
+    showToast(`Error: ${msg}`, 'error');
   }
   loginSuccess() {
-    location.hash = '/';
+    this.hideLoading();
+    showToast('Berhasil login! Mengalihkan…', 'success');
+    setTimeout(() => {
+      location.hash = '/';
+    }, 2000);
   }
 }

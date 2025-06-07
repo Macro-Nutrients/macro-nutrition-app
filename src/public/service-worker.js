@@ -39,7 +39,19 @@ self.addEventListener('fetch', (event) => {
       .then((response) => {
         return response;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() =>
+        caches.match(event.request).then((cacheResponse) => {
+          if (cacheResponse) {
+            return cacheResponse;
+          }
+          // fallback default jika tidak ada cache (bisa halaman offline atau respons kosong)
+          return new Response('Offline page not found in cache.', {
+            status: 503,
+            statusText: 'Service Unavailable',
+            headers: new Headers({ 'Content-Type': 'text/plain' }),
+          });
+        })
+      )
   );
 });
 
