@@ -13,7 +13,7 @@ import { FetchAPI } from './data/api.js';
 import { reload } from 'vite-plugin-ssr/client/router';
 
 //kebutuhan test
-import { IdbHelper } from '../scripts/utils/idb.js';
+// import { IdbHelper } from '../scripts/utils/idb.js';
 
 let app; // <-- pindahkan ke sini supaya bisa diakses oleh helper
 
