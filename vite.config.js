@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,7 +17,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/v1': {
-        target: 'https://story-api.dicoding.dev', // Redirect ke server API
+        target: 'https://macro-nutrient-api-5337178464.asia-southeast2.run.app', // Redirect ke server API
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/v1/, ''),
       },

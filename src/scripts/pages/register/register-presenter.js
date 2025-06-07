@@ -1,5 +1,5 @@
 // src/scripts/pages/register/register-presenter.js
-import { StoryAPI } from '../../data/api.js';
+import { FetchAPI } from '../../data/api.js';
 
 export default class RegisterPresenter {
   constructor({ view }) {
@@ -9,7 +9,7 @@ export default class RegisterPresenter {
   async register(payload) {
     this.view.showLoading();
     try {
-      const res = await StoryAPI.register(payload);
+      const res = await FetchAPI.register(payload);
       if (res.error) {
         this.view.showError(res.message);
       } else {

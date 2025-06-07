@@ -7,13 +7,13 @@ import '../styles/styles.css';
 import App from './pages/app.js';
 
 // API helper (pastikan ada method logout)
-import { StoryAPI } from './data/api.js';
+import { FetchAPI } from './data/api.js';
 
 // (Opsional) hanya jika pakai vite-plugin-ssr
 import { reload } from 'vite-plugin-ssr/client/router';
 
 //kebutuhan test
-import { IdbHelper } from '../scripts/utils/idb.js'
+import { IdbHelper } from '../scripts/utils/idb.js';
 
 let app; // <-- pindahkan ke sini supaya bisa diakses oleh helper
 
@@ -93,7 +93,7 @@ function bindLogout() {
 
   freshBtn.addEventListener('click', async () => {
     // 1. Hapus token
-    StoryAPI.logout();
+    FetchAPI.logout();
 
     // 2. Reload penuh (SSR) atau fallback
     try {
@@ -133,5 +133,5 @@ window.testAddStory = async () => {
 
 window.addEventListener('online', async () => {
   console.log('Online kembali, sinkronisasi cerita offline...');
-  await StoryAPI.syncOfflineStories();
+  await FetchAPI.syncOfflineStories();
 });

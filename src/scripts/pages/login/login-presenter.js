@@ -1,5 +1,5 @@
 // src/scripts/pages/login/login-presenter.js
-import { StoryAPI } from '../../data/api.js';
+import { FetchAPI } from '../../data/api.js';
 import { subscribeToPush } from '../../utils/push.js';
 
 export default class LoginPresenter {
@@ -10,7 +10,7 @@ export default class LoginPresenter {
   async login(credentials) {
     this.view.showLoading();
     try {
-      const res = await StoryAPI.login(credentials);
+      const res = await FetchAPI.login(credentials);
       if (res.error) {
         this.view.showError(res.message);
       } else {

@@ -1,5 +1,5 @@
 import { VAPID_PUBLIC_KEY } from '../config.js'; // Public Key VAPID yang diberikan
-import { StoryAPI } from '../data/api.js';
+import { FetchAPI } from '../data/api.js';
 
 // Fungsi untuk mengonversi base64 ke Uint8Array
 const urlBase64ToUint8Array = (base64String) => {
@@ -70,7 +70,7 @@ export const unsubscribeFromPush = async () => {
       throw new Error('Data unsubscribe tidak valid.');
     }
 
-    const token = StoryAPI.getToken();
+    const token = FetchAPI.getToken();
 
     await fetch('https://story-api.dicoding.dev/v1/notifications/subscribe', {
       method: 'DELETE',

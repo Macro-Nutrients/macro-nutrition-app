@@ -1,6 +1,6 @@
 /* global self, clients, caches, indexedDB */
 
-const CACHE_NAME = 'dicoding-story-cache-v1';
+const CACHE_NAME = 'dicoding-macro-nutrition-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -65,55 +65,3 @@ self.addEventListener('sync', (event) => {
   }
 });
 
-// ✅ Fungsi: Sinkronisasi ke server dari IndexedDB
-async function syncOfflineStories() {
-  const db = await openIndexedDB();
-  const tx = db.transaction('stories', 'readwrite');
-  const store = tx.objectStore('stories');
-  const stories = await store.getAll();
-
-  for (const story of stories) {
-    try {
-      const formData = new FormData();
-      formData.append('description', story.description);
-      formData.append('lat', story.lat || 0);
-      formData.append('lon', story.lon || 0);
-      formData.append('photo', story.photo);
-
-      await fetch('https://story-api.dicoding.dev/v1/stories', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-
-      await store.delete(story.id);
-    } catch (err) {
-      console.error('Gagal sinkronisasi:', err.message);
-    }
-  }
-
-  clients.matchAll().then((clientList) => {
-    clientList.forEach((client) =>
-      client.postMessage({ type: 'sync-complete' })
-    );
-  });
-}
-
-// ✅ Fungsi bantu buka IndexedDB
-function openIndexedDB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open('stories-db', 1);
-
-    request.onerror = () => reject('Gagal membuka IndexedDB');
-    request.onsuccess = () => resolve(request.result);
-
-    request.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      if (!db.objectStoreNames.contains('stories')) {
-        db.createObjectStore('stories', { keyPath: 'id' });
-      }
-    };
-  });
-}
