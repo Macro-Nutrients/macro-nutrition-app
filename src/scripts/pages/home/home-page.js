@@ -88,18 +88,18 @@ renderHistory(history) {
 
   // Membuat grid untuk menampilkan 4 card per baris
   historyList.innerHTML = `
-    <div class="grid grid-flow-col grid-rows-3">
+    <div class="grid grid-cols-3 gap-4">
       ${history.map(item => {
         const glValue = item.facts.gl || 0;
         const giValue = item.facts.gi || 0;
         const outlineClassGl = glValue > 50 ? 'outline-red-200' : 'outline-green-200';
         const outlineClassGi = giValue > 55 ? 'outline-red-200' : 'outline-green-200';
         return `
-        <div class="row-span-2 relative">
-          <div class="absolute top-2 left-2 z-10 bg-amber-300 text-xs font-semibold px-3 py-1 rounded shadow">
-            Created: ${new Date(item.created_at).toLocaleString()}
-          </div>
-          <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm">
+        <div class="">
+          <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm relative">
+            <div class="absolute top-2 left-2 z-10 bg-amber-300 text-xs font-semibold px-3 py-1 rounded shadow">
+              Created: ${new Date(item.created_at).toLocaleString()}
+            </div>
               <img src="../../../public/images/Ayam Goreng_010.jpg" alt="Foto" class="p-8 h-72 rounded-t-lg" >
               <div class="py-4 bg-amber-50">
                 <div>
