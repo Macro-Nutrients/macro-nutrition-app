@@ -86,68 +86,66 @@ renderHistory(history) {
     return;
   }
 
-  // Membuat grid untuk menampilkan 4 card per baris
   historyList.innerHTML = `
-    <div class="grid grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       ${history.map(item => {
         const glValue = item.facts.gl || 0;
         const giValue = item.facts.gi || 0;
         const outlineClassGl = glValue > 50 ? 'outline-red-200' : 'outline-green-200';
         const outlineClassGi = giValue > 55 ? 'outline-red-200' : 'outline-green-200';
         return `
-        <div class="">
-          <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm relative">
-            <div class="absolute top-2 left-2 z-10 bg-amber-300 text-xs font-semibold px-3 py-1 rounded shadow">
+        <div>
+          <div class="w-full bg-white border border-gray-200 rounded-lg shadow-sm relative">
+            <div class="absolute top-2 left-2 z-10 bg-amber-300 text-xs font-semibold px-2 py-1 rounded shadow">
               Created: ${new Date(item.created_at).toLocaleString()}
             </div>
-              <img src="../../../public/images/Ayam Goreng_010.jpg" alt="Foto" class="p-8 h-72 rounded-t-lg" >
-              <div class="py-4 bg-amber-50">
-                <div>
-                  <h5 class="card-title text-lg font-bold uppercase">${item.facts.name}</h5>
-                  <p class="text-sm text-black md:text-lg pb-2"><strong>Confidence:</strong> ${item.confidence}</p>
-                </div>
-                <hr class="pt-2 border-t-3 border-gray-400">
-                <div class="grid grid-cols-2 max-w-full bg-amber-50 pt-3">
-                  <div class="flex flex-col pb-4">
-                        <p class="py-4 text-7xl font-bold text-black md:text-4xl sm:text-lg">GI</p>
-                        <div class="flex items-center justify-center">
-                          <div class="w-12 h-12 flex items-center justify-center rounded-full outline-[0.5em] ${outlineClassGi} text-black text-2xl font-bold">
-                            ${item.facts.gi || 0}
-                          </div>
-                        </div>
-                  </div>
-                  <div class="flex flex-col pb-4">
-                        <p class="py-4 text-7xl font-bold text-black md:text-4xl sm:text-lg">GL</p>
-                        <div class="flex items-center justify-center">
-                          <div class="w-12 h-12 flex items-center justify-center rounded-full outline-[0.5em]  ${outlineClassGl}  text-black text-2xl font-bold">
-                            ${item.facts.gl || 0}
-                          </div>
-                        </div>
+            <img src="../../../public/images/Ayam Goreng_010.jpg" alt="Foto" class="p-4 h-48 md:h-72 rounded-t-lg object-cover w-full">
+            <div class="py-4 px-2 bg-amber-50">
+              <h5 class="text-lg md:text-xl font-bold uppercase text-center">${item.facts.name}</h5>
+              <p class="text-sm text-black text-center"><strong>Confidence:</strong> ${item.confidence}</p>
+              <hr class="my-2 border-t-2 border-gray-400">
+              <div class="grid grid-cols-2 gap-4 pt-2">
+                <div class="flex flex-col items-center">
+                  <p class="text-base font-bold text-black">GI</p>
+                  <div class="w-10 h-10 flex items-center justify-center rounded-full ${outlineClassGi} text-black text-lg font-bold border">
+                    ${item.facts.gi || 0}
                   </div>
                 </div>
-                <div class="grid grid-cols-2 max-w-full bg-amber-50 pt-4">
-                    <div class="flex flex-col pb-4">
-                        <dt class="pb-4 text-lg font-bold text-black md:text-lg">Calories</dt>
-                        <dd class="text-black text-lg">${item.facts.calories}</dd>
-                    </div>
-                    <div class="flex flex-col pb-4">
-                        <dt class="pb-4 text-lg font-bold text-black md:text-lg">Carbohydrates</dt>
-                        <dd class="text-black text-lg">${item.facts.carbohydrates}</dd>
-                    </div>
-                    <div class="flex flex-col pb-4">
-                        <dt class="pb-4 text-lg font-bold text-black md:text-lg">Fat</dt>
-                        <dd class="text-black text-lg">${item.facts.fat}</dd>
-                    </div>
-                    <div class="flex flex-col pb-4">
-                        <dt class="pb-4 text-lg font-bold text-black md:text-lg">Protein</dt>
-                        <dd class="text-black text-lg">${item.facts.protein}</dd>
-                    </div>
+                <div class="flex flex-col items-center">
+                  <p class="text-base font-bold text-black">GL</p>
+                  <div class="w-10 h-10 flex items-center justify-center rounded-full ${outlineClassGl} text-black text-lg font-bold border">
+                    ${item.facts.gl || 0}
+                  </div>
                 </div>
-                <button  class="mt-4 focus:outline-none p-2 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm" onclick="viewHistoryDetail('${item.id}')">Lihat Detail</button>
               </div>
+              <div class="grid grid-cols-2 gap-2 text-sm mt-4">
+                <div>
+                  <dt class="font-bold">Calories</dt>
+                  <dd>${item.facts.calories}</dd>
+                </div>
+                <div>
+                  <dt class="font-bold">Carbs</dt>
+                  <dd>${item.facts.carbohydrates}</dd>
+                </div>
+                <div>
+                  <dt class="font-bold">Fat</dt>
+                  <dd>${item.facts.fat}</dd>
+                </div>
+                <div>
+                  <dt class="font-bold">Protein</dt>
+                  <dd>${item.facts.protein}</dd>
+                </div>
+              </div>
+              <div class="mt-4 text-center">
+                <button class="px-3 py-2 text-white bg-green-700 hover:bg-green-800 rounded-lg text-sm" onclick="viewHistoryDetail('${item.id}')">
+                  Lihat Detail
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      `}).join('')}
+        `;
+      }).join('')}
     </div>
   `;
 }

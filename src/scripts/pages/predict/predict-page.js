@@ -13,7 +13,7 @@ export default class PredictPage {
         <form id="analisa" class="box-shadow p-4 mb-4" style="max-width: 600px; margin: auto;">
           <p class="py-2">Silahkan masukkan gambar makanan anda</p>
           <input type="file" id="file-input" name="image" accept="image/*" />
-          <div id="image-preview" class="image-preview mb-4"></div>
+          <div id="image-preview" class="flex justify-center items-center mb-4"></div>
           <button type="submit" class="btn btn-primary mt-2 mx-auto my-auto" style="width: 100px">Analisa</button>
         </form>
 
@@ -81,6 +81,7 @@ renderSummary(summary) {
       img.src = event.target.result;
       img.alt = 'Preview Gambar';
       img.style.maxWidth = '100%';
+      img.style.alignContent= 'center';
       img.style.borderRadius = '8px';
       img.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
 
