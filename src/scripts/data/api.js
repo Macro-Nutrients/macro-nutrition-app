@@ -36,64 +36,78 @@ async function request(path, options = {}) {
 
 export const FetchAPI = {
   // Register new user
-register: (payload) =>
-  request('/auth/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  }),
+  register: (payload) =>
+    request('/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }),
 
-login: async (payload) => {
+  login: async (payload) => {
   const data = await request('/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
-  
-  if (!data.error) {
-    // Sesuaikan dengan response dari backend
-    localStorage.setItem('token', data.result.token);
-  }
-  return data;
-},
-  //untuk login
-async analyze(formData) {
-  const token = localStorage.getItem('token');
-  const headers = {};
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
 
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
+    if (!data.error) {
+      // Sesuaikan dengan response dari backend
+      localStorage.setItem('token', data.result.token);
+    }
+    return data;
+  },
+    //untuk login
+  async analyze(formData) {
+    const token = localStorage.getItem('token');
+    const headers = {};
 
-  return await request('/inference/predict', {
-    method: 'POST',
-    body: formData,
-    headers,
-  });
-},
-// Fungsi untuk mengambil riwayat analisa
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    return await request('/inference/predict', {
+      method: 'POST',
+      body: formData,
+      headers,
+    });
+  },
+  // Fungsi untuk mengambil riwayat analisa
+    // Ambil riwayat prediksi
   // Ambil riwayat prediksi
-// Ambil riwayat prediksi
-async getHistory() {
-  const token = localStorage.getItem('token');
-  const headers = {};
+  async getHistory() {
+    const token = localStorage.getItem('token');
+    const headers = {};
 
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
 
-  return await request('/inference/history', {
-    method: 'GET',
-    headers,
-  });
-},
-  // Fetch Analyse Image untuk image free bukan login
-  analyzes: async (payload) => {
+    return await request('/inference/history', {
+      method: 'GET',
+      headers,
+    });
+  },
+    // Fetch Analyse Image untuk image free bukan login
+    analyzes: async (payload) => {
     // payload should be a FormData object for file upload
     return await request('/inference/predict', {
       method: 'POST',
       body: payload,
     });    
+  },
+
+  async getDetailPredict(id) {
+    const token = localStorage.getItem('token');
+    const headers = {};
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    return await request(`/inference/${id}`, {
+      method: 'GET',
+      headers,
+    });
   },
 
   // Push subscription

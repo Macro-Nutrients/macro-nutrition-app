@@ -30,6 +30,8 @@ export default class HomePage {
 
   async afterRender() {
     await this.presenter.init(); // Delegasikan logika ke presenter
+
+    
   }
 
   showLoading() {
@@ -104,21 +106,21 @@ renderHistory(history) {
               <h5 class="text-lg md:text-xl font-bold uppercase text-center">${item.facts.name}</h5>
               <p class="text-sm text-black text-center"><strong>Confidence:</strong> ${item.confidence}</p>
               <hr class="my-2 border-t-2 border-gray-400">
-              <div class="grid grid-cols-2 gap-4 pt-2">
+              <div class="grid grid-cols-2 gap-4 py-4">
                 <div class="flex flex-col items-center">
-                  <p class="text-base font-bold text-black">GI</p>
-                  <div class="w-10 h-10 flex items-center justify-center rounded-full ${outlineClassGi} text-black text-lg font-bold border">
+                  <p class="text-base font-bold text-black pb-2">GI</p>
+                  <div class="w-10 h-10 flex items-center justify-center rounded-full ${outlineClassGi} outline-4 text-black text-lg font-bold">
                     ${item.facts.gi || 0}
                   </div>
                 </div>
                 <div class="flex flex-col items-center">
-                  <p class="text-base font-bold text-black">GL</p>
-                  <div class="w-10 h-10 flex items-center justify-center rounded-full ${outlineClassGl} text-black text-lg font-bold border">
+                  <p class="text-base font-bold text-black pb-2">GL</p>
+                  <div class="w-10 h-10 flex items-center justify-center rounded-full ${outlineClassGl} outline-4 text-black text-lg font-bold">
                     ${item.facts.gl || 0}
                   </div>
                 </div>
               </div>
-              <div class="grid grid-cols-2 gap-2 text-sm mt-4">
+              <div class="grid grid-cols-2 gap-2 text-sm pt-2 pb-4">
                 <div>
                   <dt class="font-bold">Calories</dt>
                   <dd>${item.facts.calories}</dd>
@@ -137,7 +139,7 @@ renderHistory(history) {
                 </div>
               </div>
               <div class="mt-4 text-center">
-                <button class="px-3 py-2 text-white bg-green-700 hover:bg-green-800 rounded-lg text-sm" onclick="viewHistoryDetail('${item.id}')">
+                <button type="button" class="px-3 py-2 text-white bg-green-700 hover:bg-green-800 rounded-lg text-sm history-detail-btn" data-id="${item.id}">
                   Lihat Detail
                 </button>
               </div>
@@ -149,4 +151,6 @@ renderHistory(history) {
     </div>
   `;
 }
+
+
 }
