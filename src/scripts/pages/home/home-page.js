@@ -31,7 +31,14 @@ export default class HomePage {
   async afterRender() {
     await this.presenter.init(); // Delegasikan logika ke presenter
 
-    
+    document.getElementById('history-list').addEventListener('click', (event) => {
+      if (event.target.classList.contains('history-detail-btn')) {
+        const id = event.target.getAttribute('data-id');
+        if (id) {
+          window.location.hash = `/detail/${id}`;
+        }
+      }
+    });
   }
 
   showLoading() {
