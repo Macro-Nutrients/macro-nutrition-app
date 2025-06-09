@@ -44,49 +44,89 @@ export default class DetailPage {
 
 renderSummary(summary) {
   const resultContainer = document.getElementById('result');
+
+  // Confidence dalam persen
+  const confidencePercent = summary.confidence.toFixed(2);
+
   resultContainer.innerHTML = `
-    <div class="flex flex-col">
-          <div class="w-96 self-center">
-            <img src="../../../public/images/Ayam Goreng_010.jpg" alt="Foto" class="p-4 h-48 md:h-72 lg:h-72 w-48 md:w-72 lg:w-full object-contain rounded-t-lg">
-            <div class="py-4 px-2 bg-amber-50">
-              <h5 class="text-lg md:text-xl font-bold uppercase text-center">${summary.facts.name}</h5>
-              <p class="text-sm text-black text-center"><strong>Confidence:</strong> ${summary.confidence}</p>
-              <hr class="my-2 border-t-2 border-gray-400">
-              <div class="grid grid-cols-2 gap-4 py-4">
-                <div class="flex flex-col items-center">
-                  <p class="text-base font-bold text-black pb-2">GI</p>
-                  <div class="w-10 h-10 flex items-center justify-center rounded-full ${summary.facts.gi > 50 ? 'outline-red-200' : 'outline-green-200'} outline-4 text-black text-lg font-bold">
-                    ${summary.facts.gi || 0}
-                  </div>
-                </div>
-                <div class="flex flex-col items-center">
-                  <p class="text-base font-bold text-black pb-2">GL</p>
-                  <div class="w-10 h-10 flex items-center justify-center rounded-full ${summary.facts.gl > 50 ? 'outline-red-200' : 'outline-green-200'} outline-4 text-black text-lg font-bold">
-                    ${summary.facts.gl || 0}
-                  </div>
-                </div>
-              </div>
-              <div class="grid grid-cols-2 gap-2 text-sm pt-2 pb-4">
-                <div>
-                  <dt class="font-bold">Calories</dt>
-                  <dd>${summary.facts.calories}</dd>
-                </div>
-                <div>
-                  <dt class="font-bold">Carbs</dt>
-                  <dd>${summary.facts.carbohydrates}</dd>
-                </div>
-                <div>
-                  <dt class="font-bold">Fat</dt>
-                  <dd>${summary.facts.fat}</dd>
-                </div>
-                <div>
-                  <dt class="font-bold">Protein</dt>
-                  <dd>${summary.facts.protein}</dd>
-                </div>
-              </div>
+    <div class="max-w-lg mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="w-full flex justify-center bg-gray-50 p-4">
+        <img 
+          src="${summary.image?.public_url || ''}" 
+          alt="Foto ${summary.facts.name}" 
+          style="max-width: 100%; height: auto; border-radius: 12px;"
+          onerror="this.onerror=null; this.src='../../../public/images/default-image.jpg';"
+        />
+      </div>
+
+      <div class="p-6 bg-amber-50">
+        <h2 class="text-3xl font-extrabold text-center uppercase mb-2">${summary.facts.name}</h2>
+
+        <div class="mb-4">
+          <label class="block font-semibold mb-1 text-gray-700">Confidence</label>
+          <div class="w-full bg-gray-300 rounded-full h-6 overflow-hidden">
+            <div class="bg-green-500 h-6 rounded-full text-center text-white font-bold" style="width: ${confidencePercent}%;">
+              ${confidencePercent}%
             </div>
           </div>
         </div>
+
+        <hr class="my-4 border-gray-400">
+
+        <div class="grid grid-cols-2 gap-6 text-gray-800 text-lg font-semibold">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🔥</span>
+            <div>
+              <dt>Calories</dt>
+              <dd class="text-base font-normal">${summary.facts.calories}</dd>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🍞</span>
+            <div>
+              <dt>Carbs</dt>
+              <dd class="text-base font-normal">${summary.facts.carbohydrates}</dd>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🥓</span>
+            <div>
+              <dt>Fat</dt>
+              <dd class="text-base font-normal">${summary.facts.fat}</dd>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🍗</span>
+            <div>
+              <dt>Protein</dt>
+              <dd class="text-base font-normal">${summary.facts.protein}</dd>
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-4 border-gray-400">
+
+        <div class="flex justify-center gap-10 text-center">
+          <div>
+            <p class="text-sm font-bold mb-1">GI</p>
+            <div class="inline-block w-12 h-12 rounded-full ${summary.facts.gi > 50 ? 'bg-red-300' : 'bg-green-300'} flex items-center justify-center font-bold text-lg text-black">
+              ${summary.facts.gi || 0}
+            </div>
+          </div>
+          <div>
+            <p class="text-sm font-bold mb-1">GL</p>
+            <div class="inline-block w-12 h-12 rounded-full ${summary.facts.gl > 50 ? 'bg-red-300' : 'bg-green-300'} flex items-center justify-center font-bold text-lg text-black">
+              ${summary.facts.gl || 0}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   `;
 }
+
 }

@@ -108,7 +108,13 @@ renderHistory(history) {
             <div class="absolute top-2 left-2 z-10 bg-amber-300 text-xs font-semibold px-2 py-1 rounded shadow">
               Created: ${new Date(item.created_at).toLocaleString()}
             </div>
-            <img src="../../../public/images/Ayam Goreng_010.jpg" alt="Foto" class="p-4 h-48 md:h-72 rounded-t-lg object-cover w-full">
+            <img 
+  src="${item.public_url}" 
+  alt="Foto ${item.facts.name}" 
+  class="w-full h-48 md:h-72 rounded-t-lg object-cover" 
+  style="border-radius: 0.5rem 0.5rem 0 0; overflow: hidden;" 
+/>
+
             <div class="py-4 px-2 bg-amber-50">
               <h5 class="text-lg md:text-xl font-bold uppercase text-center">${item.facts.name}</h5>
               <p class="text-sm text-black text-center"><strong>Confidence:</strong> ${item.confidence}</p>
